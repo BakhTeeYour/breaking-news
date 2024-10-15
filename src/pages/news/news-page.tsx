@@ -14,6 +14,10 @@ const NewsPage = () => {
 
 	useEffect(() => {
 		if (id) dispatch(getNews(id))
+		window.scrollTo({
+			top: 0,
+			behavior: 'smooth'
+		})
 	}, [])
 
 	return (
