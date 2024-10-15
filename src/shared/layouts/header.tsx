@@ -1,6 +1,6 @@
 import { useMediaQuery } from 'usehooks-ts'
 import classNames from 'classnames'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { breakpoints } from 'shared/lib'
 import { useAppDispatch } from 'store/hooks'
 import { Box, Button } from 'ui-components'
@@ -12,7 +12,9 @@ type Props = {
 
 export const Header = ({ className }: Props) => {
 	const isMobile = useMediaQuery(breakpoints.mobile)
-	const isNewsPage = window.location.href.includes('news')
+	const { pathname } = useLocation()
+	const isHomePage = pathname === '/'
+
 	const dispatch = useAppDispatch()
 	return (
 		<Box
@@ -35,7 +37,7 @@ export const Header = ({ className }: Props) => {
 						alt='logo'
 					/>
 				</Link>
-				{!isNewsPage && (
+				{isHomePage && (
 					<Button
 						size={isMobile ? 'medium' : 'large'}
 						onClick={() => dispatch(setIsOpenNewsModal(true))}
