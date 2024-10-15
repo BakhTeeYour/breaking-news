@@ -76,7 +76,6 @@ export function Input<T extends FieldValues>({
 		'h-full'
 	)
 
-	const hintClasses = classNames('font-sans', 'text-[14px] leading-[20px]')
 	const getProps = (field: FieldValues, error?: string) => {
 		return {
 			className: classNames(inputClasses, {
