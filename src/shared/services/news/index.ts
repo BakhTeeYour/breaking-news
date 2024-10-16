@@ -8,9 +8,11 @@ export const getInitialAllNews = () => async (dispatch: AppDispatch) => {
 	dispatch(setIsLoading(true))
 
 	try {
+		const news: News[] = await getInitialNews()
 		const res = await API.news.fetchAllNews()
-		setInitialNews(res)
-		dispatch(setNews(res))
+
+		setInitialNews(news.length > 0 ? news : res)
+		dispatch(setNews(news.length > 0 ? news : res))
 	} catch (error) {
 		console.log(error)
 	} finally {
