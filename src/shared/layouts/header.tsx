@@ -2,9 +2,9 @@ import { useMediaQuery } from 'usehooks-ts'
 import classNames from 'classnames'
 import { Link, useLocation } from 'react-router-dom'
 import { breakpoints } from 'shared/lib'
-import { useAppDispatch } from 'store/hooks'
+import { useAppDispatch, useAppSelector } from 'store/hooks'
 import { Box, Button } from 'ui-components'
-import { setIsOpenNewsModal } from 'store/news/slice'
+import { selectNews, setIsOpenNewsModal } from 'store/news/slice'
 
 type Props = {
 	className?: string
@@ -12,6 +12,7 @@ type Props = {
 
 export const Header = ({ className }: Props) => {
 	const isMobile = useMediaQuery(breakpoints.mobile)
+	const { news } = useAppSelector(selectNews)
 	const { pathname } = useLocation()
 	const isHomePage = pathname === '/'
 
@@ -37,7 +38,7 @@ export const Header = ({ className }: Props) => {
 						alt='logo'
 					/>
 				</Link>
-				{isHomePage && (
+				{isHomePage && !!news?.length && (
 					<Button
 						size={isMobile ? 'medium' : 'large'}
 						onClick={() => dispatch(setIsOpenNewsModal(true))}

@@ -1,41 +1,75 @@
-import _ from 'lodash'
+import classNames from 'classnames'
+import { useEffect, useState } from 'react'
 import { Button } from 'ui-components'
 
 type Props = {
-	pageCount: number
-	totalPage: number
+	pageRangeDisplayed: number
 	onPageChange: (page: number) => void
-	currPage: number
+	defaultPage: number
+	itemsCountPerPage: number
 }
 
 export const Pagination = ({
-	pageCount,
-	totalPage,
+	pageRangeDisplayed = 6,
 	onPageChange,
-	currPage
+	defaultPage = 1,
+	itemsCountPerPage = 6
 }: Props) => {
-	const pageSize = Math.ceil(pageCount / totalPage)
+	const [pageRange, setPageRange] = useState<number[]>()
+	const [currentPage, setCurrentPage] = useState<number>(defaultPage)
+	const totalPage = Math.ceil(pageRangeDisplayed / itemsCountPerPage)
 
-	if (pageSize === 1) return null
+	useEffect(() => {
+		if (totalPage <= 7) {
+			setPageRange(Array.from({ length: totalPage }, (_, index) => index + 1))
+			return
+		}
+		if (currentPage <= 4) {
+			setPageRange([1, 2, 3, 4, 5, 0, totalPage])
+			return
+		}
+		if (currentPage >= totalPage - 3) {
+			setPageRange([
+				1,
+				0,
+				totalPage - 4,
+				totalPage - 3,
+				totalPage - 2,
+				totalPage - 1,
+				totalPage
+			])
+			return
+		} else {
+			setPageRange([
+				1,
+				0,
+				currentPage - 1,
+				currentPage,
+				currentPage + 1,
+				0,
+				totalPage
+			])
+		}
+	}, [totalPage, currentPage])
 
-	const pages = _.range(1, pageSize + 1)
 	return (
-		<ul className='flex'>
-			{pages.map(e => (
-				<li
-					className={`p-1 rounded-[8px]  ${currPage === e && 'active'}`}
-					key={`page_${e}`}
-				>
+		<ul className='flex gap-2'>
+			{pageRange?.map((el, index) => {
+				return (
 					<Button
-						className=''
-						onClick={() => onPageChange(e)}
 						size='small'
-						color={currPage === e ? 'primary' : 'secondary'}
+						color={currentPage === el ? 'primary' : 'secondary'}
+						onClick={() => {
+							if (el) setCurrentPage(el)
+							onPageChange(el)
+						}}
+						className={classNames('transition-colors duration-100 ')}
+						key={index}
 					>
-						{e}
+						{el ? `${el}` : '...'}
 					</Button>
-				</li>
-			))}
+				)
+			})}
 		</ul>
 	)
 }

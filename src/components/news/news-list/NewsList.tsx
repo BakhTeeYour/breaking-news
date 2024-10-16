@@ -5,10 +5,13 @@ import { breakpoints, getInitialNews, paginate } from 'shared/lib'
 import { useStateLocal } from 'shared/hooks/useStateLocal'
 import { News } from 'shared/types/news'
 import NewsItem from '../news-item'
-import { Box, Pagination, Typography } from 'ui-components'
+import { Box, Button, Pagination, Typography } from 'ui-components'
+import { useAppDispatch } from 'store/hooks'
+import { setIsOpenNewsModal } from 'store/news/slice'
 
 const NewsList = () => {
 	const isMobile = useMediaQuery(breakpoints.mobile)
+	const dispatch = useAppDispatch()
 	const [news] = useStateLocal<News[] | undefined>(
 		'INITIAL_NEWS',
 		getInitialNews()
@@ -36,25 +39,35 @@ const NewsList = () => {
 
 	return (
 		<>
-			{news ? (
+			{news?.length ? (
 				<>
 					<Box className={containerClasses}>
 						{newsCrop?.map(item => <NewsItem key={item.id} data={item} />)}
 					</Box>
 					<Box className='flex justify-center items-center mt-5'>
 						<Pagination
-							pageCount={count!}
-							totalPage={totalPage}
+							itemsCountPerPage={totalPage}
+							pageRangeDisplayed={count!}
 							onPageChange={e => handlePageChange(e)}
-							currPage={currPage}
+							defaultPage={currPage}
 						/>
 					</Box>
 				</>
 			) : (
-				<Box className='flex flex-col items-center'>
+				<Box className='flex flex-col gap-y-3 items-center'>
 					<Typography color='txtPrimary' size='text-2xl'>
 						Not results were found
 					</Typography>
+					<Typography color='txtPrimary' size='text-2xl'>
+						Would you like to create one?
+					</Typography>
+					<Button
+						size='large'
+						color='primary'
+						onClick={() => dispatch(setIsOpenNewsModal(true))}
+					>
+						Create
+					</Button>
 				</Box>
 			)}
 		</>

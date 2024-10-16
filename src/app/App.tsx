@@ -1,10 +1,10 @@
 import { RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { store } from 'store/store'
-import { getAllNews } from 'shared/services'
+import { getInitialAllNews } from 'shared/services'
 import { router } from './router'
 
-store.dispatch(getAllNews())
+store.dispatch(getInitialAllNews())
 
 function App() {
 	return (
