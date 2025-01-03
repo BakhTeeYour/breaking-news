@@ -20,7 +20,7 @@ const NewsItem: FC<Props> = ({ data }) => {
 		'rounded-[24px]',
 		'bg-neutral-100',
 		'relative',
-		isMobile ? 'w-full' : 'w-[360px]',
+		isMobile ? 'w-full' : 'max-w-[360px]',
 		'p-4'
 	)
 	return (
